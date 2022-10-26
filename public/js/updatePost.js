@@ -5,11 +5,28 @@ const updatePostHandler = async (event) => {
   const content = document.querySelector('#content').value.trim();
   const postID = document.querySelector('#content').getAttribute('data-postID');
   const title = document.querySelector('#title').value.trim();
-  console.log(content, postID, title);
-  if (content && title) {
-    // Send a POST request to the API endpoint
+
+  if (event.submitter.name == 'update') {
+    if (content && title) {
+      // Send a POST request to the API endpoint
+      const response = await fetch(`/api/posts/${postID}`, {
+        method: 'PUT',
+        body: JSON.stringify({ content, title }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+        // If successful, redirect the browser to the profile page
+        document.location.replace(`/dashboard`);
+      } else {
+        alert(response.statusText);
+      }
+    }
+  }
+
+  if (event.submitter.name == 'delete') {
     const response = await fetch(`/api/posts/${postID}`, {
-      method: 'POST',
+      method: 'DELETE',
       body: JSON.stringify({ content, title }),
       headers: { 'Content-Type': 'application/json' },
     });
@@ -18,11 +35,11 @@ const updatePostHandler = async (event) => {
       // If successful, redirect the browser to the profile page
       document.location.replace(`/dashboard`);
     } else {
-      // console.log((await response.json()).message);
       alert(response.statusText);
     }
   }
 };
+
 document
   .querySelector('.update-form')
   .addEventListener('submit', updatePostHandler);

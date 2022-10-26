@@ -2,9 +2,9 @@ const router = require('express').Router();
 const { Post, User, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
+//find all blog posts and render to homepage
 router.get('/', async (req, res) => {
   try {
-    // Get all projects and JOIN with user data
     const projectData = await Post.findAll({
       include: [
         {
@@ -14,10 +14,8 @@ router.get('/', async (req, res) => {
       ],
     });
 
-    // Serialize data so the template can read it
     const posts = projectData.map((project) => project.get({ plain: true }));
 
-    // Pass serialized data and session flag into template
     res.render('homepage', {
       posts,
       logged_in: req.session.logged_in,
@@ -27,6 +25,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+//render specific post by post id
 router.get('/post/:id', async (req, res) => {
   try {
     const postData = await Post.findByPk(req.params.id, {
@@ -66,9 +65,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
     });
 
     const user = userData.get({ plain: true });
-    console.log(user);
-    console.log('----');
-    // console.log(...user);
+
     res.render('dashboard', {
       ...user,
       logged_in: true,
@@ -82,8 +79,12 @@ router.get('/update/:id', withAuth, async (req, res) => {
   // If the user is already logged in, redirect the request to another route
   const rawPost = await Post.findByPk(req.params.id);
   const post = rawPost.get({ plain: true });
-  console.log(post);
+
   res.render('updatePost', { ...post, logged_in: true });
+});
+
+router.get('/newPost', withAuth, async (req, res) => {
+  res.render('newPost', { logged_in: true });
 });
 
 router.get('/login', (req, res) => {

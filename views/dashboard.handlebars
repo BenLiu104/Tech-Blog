@@ -3,13 +3,19 @@
 {{#each posts as |post| }}
   <div class="post container">
       <div class="card">
-          <div class="flex-row">
-              <h3 class="col-9 bg-dark text-light card-header"><a href="/update/{{id}}">{{title}}</a></h3>
-              <h6 class="col-3 bg-dark text-light">Create on {{date_created}}</h6>
+          <div class="flex-row bg-dark justify-space-between align-center">
+              <h3 class="bg-dark text-light card-header"><a href="/update/{{id}}">{{title}}</a></h3>
+              <h6 class="bg-dark text-light">Create on {{format_date date_created}}</h6>
           </div>
           <p class="card-body">{{content}}</p>
       </div>
 
   </div>  
 {{/each}}
+{{/if}}
+
+{{#if logged_in}}
+<div class="text-center">
+<a id="new-post" class="btn btn-primary" href="/newPost" role="button">New Post</a>
+</div>
 {{/if}}
